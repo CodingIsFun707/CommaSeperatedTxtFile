@@ -5,13 +5,13 @@ class CommaSeperatedTxtFile():
         self.objects = []
 
         for i in self.f.readlines():
-            objectdict = {}
             line = self.line_to_list(i)
-            for i in range(len(self.header)):
-                headerElement = self.header[i]
-                lineElement = line[i]
-                objectdict[headerElement] = lineElement
-            self.objects.append(objectdict)
+            self.objects.append(line)
+        
+        temp = []
+        for i in self.objects:
+            temp.append(LineObject(self.header, i))
+        self.objects = temp[:]
         
     def line_to_list(self, line, delimiter = ','):
         words = []
@@ -25,5 +25,11 @@ class CommaSeperatedTxtFile():
         words.append(runningWord)
         return words
 
+class LineObject():
+    def __init__(self, header, line):
+        for i in range(len(header)):
+            exec(f"self.{header[i]} = '{line[i]}'")
+        self.rawLine = line
+
 file = CommaSeperatedTxtFile('xlsx.txt')
-print(file.objects[0]['Firstname'])
+print(file.objects[0].Lastname)
